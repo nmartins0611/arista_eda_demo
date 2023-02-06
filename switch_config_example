@@ -1,0 +1,59 @@
+Last login: Mon Feb  6 17:18:45 2023 from 192.168.11.2
+arista01>en
+arista01#show run
+! Command: show running-config
+! device: arista01 (vEOS-lab, EOS-4.29.0.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+aaa root secret sha512 $6$v0wijGe09tUpQ0Tl$RGDrOjpbnu7VRjHdjMpF15Zn7mVICv3IsYWttvdWVu.pxrg70DRQP96wCyqR4DDovmp1MpYXAUrLOYHNqqivQ/
+aaa root ssh-key ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCc2Sbab10m/L+ycxlpSctrj6SxMh7C34TI0BjFwgB6oNhYmgXFuZeqOemOez3NT0iulXuFqn3tc8YenhVNPGtureoJrvoHrkzfqTUTdgCvnQPoUZ/3Pdl7l25fA7SrYLI/W5+qy29dFCmv1iIYojpepny7wmTBeDQfVqHFP5F162rJO6Q1FWSISBAcJ1pf2bZ3tLRHxqnaQSmy0Ke2qMgsdy7qucOU9QzDLMglQ4FQ663+q3lteOu2W2uMdtTRGmNvLrWLeibALE8mDoIMKmzPAZ/4osUPMAt2s02nClYEPYUaPAt7t0zEhTu7cjLchQMVNe8WgmaZzKJVhmwi5ZvVGQBg3oPl0ObO0PqDovWWrBo7QmYHyaWhUT8wj7BM0Ks9MYp9IuBWHrGMbUSuEQPz04XbnVprmQdvMPaRnXerEfup193fmR7grFR8Bc0qbxqktakvsE2wABFp0Jh0tqUrOtrHExGoFFL3LNV3Chq0/3fO+/uUFvE/dwx+eGW2/A7FoizCYov6+OlOGWFe+rUN7Auc1eBy99wKLiqR1W74bNIHwqA73dZLzgU+reM7Y/gXEiGyAHKa7mpz1Zu5FJ+XXiBK7GIgI+HOkeYe1AjkT5wwrT5RQrzaz1tzLCkU2OF5qoglzbBpdP0bQx02D6RMoUCp3VAYCA4OCACuv5ypsw== nunom@fedora
+!
+username admin role network-admin secret sha512 $6$s2XoS8PR59MNacnf$AuMZ43TsU9KB8lvm57uhrOaCx1g3eE72YEFf7a6JqG5iO.c6M2tjWmuESv4pRzGzxP44MbafL/FqmnAJaBgKb1
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname arista01
+!
+spanning-tree mode mstp
+!
+management api http-commands
+  protocol http
+   no shutdown
+!
+management api gnmi
+   transport grpc eos
+   provider eos-native
+!
+management api netconf
+   transport ssh default
+!
+aaa authorization exec default local
+!
+interface Ethernet1
+   no switchport
+   ip address dhcp
+!
+interface Ethernet2
+   description BGP Link
+   no switchport
+   ip address 192.168.200.195/24
+!
+interface Loopback0
+!
+interface Management0
+!
+interface Management1
+   ip address dhcp
+!
+ip access-list copp
+   10 permit ip any any
+!
+ip access-list lab
+   10 permit ip any any
+!
+ip routing
+!
+end
