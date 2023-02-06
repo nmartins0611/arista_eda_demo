@@ -1,5 +1,7 @@
 # arista_eda_demo
 
+Download the EOS vm or container direct from Arista
+
 Basic Network example with Event-Driven Ansible.
 
 1. Kafka and Telegraf is needed
