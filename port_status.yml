@@ -1,0 +1,17 @@
+---
+
+- name: Port State Event from Arista
+
+  hosts: switch
+  sources:
+   - ansible.eda.kafka:
+       host: 192.168.11.49
+       port: 9092
+       topic: network
+
+  rules:
+   - name: Port is down
+     condition: event.fields.admin_status == "DOWN"
+     action:
+       run_playbook:
+        name: bring-her-up.yml
