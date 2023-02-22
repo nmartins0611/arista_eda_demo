@@ -15,3 +15,9 @@
      action:
        run_playbook:
         name: bring-her-up.yml
+
+   - name: Port is up
+     condition: event.fields.admin_status == "UP"
+     action:
+       run_playbook:
+        name: she-is-up.yml
