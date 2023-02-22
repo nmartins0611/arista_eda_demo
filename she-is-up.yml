@@ -1,0 +1,48 @@
+---
+- name: Connecting to Leaf
+  hosts: switch
+  connection: local
+  gather_facts: false
+  collections:
+    - servicenow.itsm
+
+  vars:
+   ansible_connection: ansible.netcommon.network_cli
+   ansible_network_os: arista.eos.eos
+   ansible_user: admin
+   ansible_password: 
+   ansible_become: yes
+   ansible_become_method: enable
+   SN_HOST: "{{ lookup('env', 'SN_HOST') }}"
+   SN_USERNAME: "{{ lookup('env', 'SN_USERNAME') }}"
+   SN_PASSWORD: "{{ lookup('env', 'SN_PASSWORD') }}"
+#  vars_files:
+#   - /tmp/srv/arista_desired.yml
+
+  tasks:
+
+    - name: Create incident
+      servicenow.itsm.incident:
+        state: new
+        caller: "{{ lookup('env', 'SN_USERNAME') }}"
+        short_description: "Leaf Network Port Change detected"
+        description: "Port status changed on Arista01 - Ensuring configuration is compliance"
+        impact: high
+        urgency: high
+ #     register: new_incident
+      delegate_to: localhost
+
+    - name: Download Network Config from Source of Truth
+      ansible.builtin.git:
+      # repo: http://nmartins0611:yT7C8k8Pypwa_Q8yL_Kz@gitlab.prometheus.io/nmartins0611/aws_terraform_builds.git
+       repo: http://gitlab.prometheus.io/nmartins0611/arista_sot.git
+       dest: /tmp/srv
+       clone: yes
+
+    - name: Restoring Configuration of Interfaces
+      include_vars: /tmp/srv/arista_desired.yml
+
+    - name: Merge Configurations
+      arista.eos.eos_l2_interfaces:
+       config: "{{ my_sot }}"
+       state: merged
